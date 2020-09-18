@@ -75,9 +75,9 @@ def depthFirstSearch(problem):
     "*** YOUR CODE HERE ***"
     
     #Results of provided simple commands
-        #Start: (34, 16)
-        #Is the start a goal? False
-        #Start's successors: [((34, 15), 'South', 1), ((33, 16), 'West', 1)]
+    #Start: (34, 16)
+    #Is the start a goal? False
+    #Start's successors: [((34, 15), 'South', 1), ((33, 16), 'West', 1)]
     
     #Stack data structure: push, pop, isEmpty
     frontier = util.Stack()
