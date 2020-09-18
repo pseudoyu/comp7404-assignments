@@ -73,7 +73,6 @@ def depthFirstSearch(problem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    
     #Results of provided simple commands
     #Start: (34, 16)
     #Is the start a goal? False
