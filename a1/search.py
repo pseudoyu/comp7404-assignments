@@ -97,12 +97,36 @@ def breadthFirstSearch(problem):
     Search the shallowest nodes in the search tree first.
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    #Queue data structure: push, pop, isEmpty
+    frontier = util.Queue()
+    #Initialize frontier
+    frontier.push((problem.getStartState(), []))
+    #Initialize explored set to be empty
+    exploredSet = set()
+    
+    while frontier:
+        node,actions = frontier.pop()
+        if problem.isGoalState(node): return actions
+        if node not in exploredSet:
+            exploredSet.add(node)
+            for successor, action, stepCost in problem.getSuccessors(node): frontier.push((successor, actions + [action]))
 
 def uniformCostSearch(problem):
     "Search the node of least total cost first. "
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    #Queue data structure: push, pop, isEmpty
+    frontier = util.Queue()
+    #Initialize frontier
+    frontier.push((problem.getStartState(), []))
+    #Initialize explored set to be empty
+    exploredSet = set()
+    
+    while frontier:
+        node,actions = frontier.pop()
+        if problem.isGoalState(node): return actions
+        if node not in exploredSet:
+            exploredSet.add(node)
+            for successor, action, stepCost in problem.getSuccessors(node): frontier.push((successor, actions + [action]))
 
 def nullHeuristic(state, problem=None):
     """
@@ -110,7 +134,7 @@ def nullHeuristic(state, problem=None):
     goal in the provided SearchProblem.  This heuristic is trivial.
     """
     return 0
-
+ 
 def aStarSearch(problem, heuristic=nullHeuristic):
     "Search the node that has the lowest combined cost and heuristic first."
     "*** YOUR CODE HERE ***"
