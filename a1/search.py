@@ -86,11 +86,11 @@ def depthFirstSearch(problem):
     exploredSet = set()
     
     while frontier:
-        node,actions = frontier.pop()
-        if problem.isGoalState(node): return actions
-        if node not in exploredSet:
-            exploredSet.add(node)
-            for successor, action, stepCost in problem.getSuccessors(node): frontier.push((successor, actions + [action]))
+        nowLocation, path = frontier.pop()
+        if (problem.isGoalState(nowLocation)): return path
+        if (nowLocation not in exploredSet):
+            exploredSet.add(nowLocation)
+            for nextLocation, move, cost in problem.getSuccessors(nowLocation): frontier.push((nextLocation, path + [move,]))
 
 def breadthFirstSearch(problem):
     """
@@ -105,28 +105,28 @@ def breadthFirstSearch(problem):
     exploredSet = set()
     
     while frontier:
-        node,actions = frontier.pop()
-        if problem.isGoalState(node): return actions
-        if node not in exploredSet:
-            exploredSet.add(node)
-            for successor, action, stepCost in problem.getSuccessors(node): frontier.push((successor, actions + [action]))
+        nowLocation, path = frontier.pop()
+        if (problem.isGoalState(nowLocation)): return path
+        if (nowLocation not in exploredSet):
+            exploredSet.add(nowLocation)
+            for nextLocation, move, cost in problem.getSuccessors(nowLocation): frontier.push((nextLocation, path + [move,]))
 
 def uniformCostSearch(problem):
     "Search the node of least total cost first. "
     "*** YOUR CODE HERE ***"
-    #Queue data structure: push, pop, isEmpty
-    frontier = util.Queue()
+    #PriorityQueue data structure: push, pop, isEmpty
+    frontier = util.PriorityQueue()
     #Initialize frontier
-    frontier.push((problem.getStartState(), []))
+    frontier.push((problem.getStartState(), [], 0), 0)
     #Initialize explored set to be empty
     exploredSet = set()
     
     while frontier:
-        node,actions = frontier.pop()
-        if problem.isGoalState(node): return actions
-        if node not in exploredSet:
-            exploredSet.add(node)
-            for successor, action, stepCost in problem.getSuccessors(node): frontier.push((successor, actions + [action]))
+        nowLocation, path, nowCost = frontier.pop()
+        if (problem.isGoalState(nowLocation)): return path
+        if (nowLocation not in exploredSet):
+            exploredSet.add(nowLocation)
+            for nextLocation, move, nextCost in problem.getSuccessors(nowLocation): frontier.push((nextLocation, path + [move,], nowCost + nextCost), nowCost + nextCost)
 
 def nullHeuristic(state, problem=None):
     """
@@ -134,7 +134,7 @@ def nullHeuristic(state, problem=None):
     goal in the provided SearchProblem.  This heuristic is trivial.
     """
     return 0
- 
+
 def aStarSearch(problem, heuristic=nullHeuristic):
     "Search the node that has the lowest combined cost and heuristic first."
     "*** YOUR CODE HERE ***"
