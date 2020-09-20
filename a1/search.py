@@ -90,7 +90,7 @@ def depthFirstSearch(problem):
         if (problem.isGoalState(nowLocation)): return path
         if (nowLocation not in exploredSet):
             exploredSet.add(nowLocation)
-            for nextLocation, move, cost in problem.getSuccessors(nowLocation): frontier.push((nextLocation, path + [move,]))
+            for (nextLocation, move, cost) in problem.getSuccessors(nowLocation): frontier.push((nextLocation, path + [move,]))
 
 def breadthFirstSearch(problem):
     """
@@ -109,7 +109,7 @@ def breadthFirstSearch(problem):
         if (problem.isGoalState(nowLocation)): return path
         if (nowLocation not in exploredSet):
             exploredSet.add(nowLocation)
-            for nextLocation, move, cost in problem.getSuccessors(nowLocation): frontier.push((nextLocation, path + [move,]))
+            for (nextLocation, move, cost) in problem.getSuccessors(nowLocation): frontier.push((nextLocation, path + [move,]))
 
 def uniformCostSearch(problem):
     "Search the node of least total cost first. "
@@ -126,7 +126,7 @@ def uniformCostSearch(problem):
         if (problem.isGoalState(nowLocation)): return path
         if (nowLocation not in exploredSet):
             exploredSet.add(nowLocation)
-            for nextLocation, move, nextCost in problem.getSuccessors(nowLocation): frontier.push((nextLocation, path + [move,], nowCost + nextCost), nowCost + nextCost)
+            for (nextLocation, move, nextCost) in problem.getSuccessors(nowLocation): frontier.push((nextLocation, path + [move,], nowCost + nextCost), nowCost + nextCost)
 
 def nullHeuristic(state, problem=None):
     """
@@ -138,7 +138,20 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     "Search the node that has the lowest combined cost and heuristic first."
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    #PriorityQueue data structure: push, pop, isEmpty
+    frontier = util.PriorityQueue()
+    #Initialize frontier
+    frontier.push((problem.getStartState(), [], heuristic(problem.getStartState(),problem)), heuristic(problem.getStartState(),problem))
+    #Initialize explored set to be empty
+    exploredSet = set()
+    
+    while frontier:
+        nowLocation, path, nowHeuristic = frontier.pop()
+        if (problem.isGoalState(nowLocation)): return path
+        if (nowLocation not in exploredSet):
+            exploredSet.add(nowLocation)
+            for (nextLocation, move, nextHeuristic) in problem.getSuccessors(nowLocation):
+                frontier.push((nextLocation, path + [move,], nowHeuristic + nextHeuristic + heuristic(nextLocation, problem) - heuristic(nowLocation, problem)), nowHeuristic + nextHeuristic + heuristic(nextLocation, problem) - heuristic(nowLocation, problem))
 
 # Abbreviations
 bfs = breadthFirstSearch
