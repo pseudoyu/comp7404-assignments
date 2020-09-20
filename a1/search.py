@@ -141,7 +141,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     #PriorityQueue data structure: push, pop, isEmpty
     frontier = util.PriorityQueue()
     #Initialize frontier
-    frontier.push((problem.getStartState(), [], heuristic(problem.getStartState(),problem)), heuristic(problem.getStartState(),problem))
+    frontier.push((problem.getStartState(), [], heuristic(problem.getStartState(), problem)), heuristic(problem.getStartState(), problem))
     #Initialize explored set to be empty
     exploredSet = set()
     
