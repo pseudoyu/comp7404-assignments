@@ -101,15 +101,15 @@ def breadthFirstSearch(problem):
     frontier = util.Queue()
     #Initialize frontier
     frontier.push((problem.getStartState(), []))
-    #Initialize explored set to be empty
-    exploredSet = set()
+    #Initialize explored list to be empty
+    exploredList = list()
     
     while frontier:
         nowLocation, path = frontier.pop()
         if (problem.isGoalState(nowLocation)): return path
-        if (nowLocation not in exploredSet):
-            exploredSet.add(nowLocation)
-            for (nextLocation, move, cost) in problem.getSuccessors(nowLocation): frontier.push((nextLocation, path + [move,]))
+        if (nowLocation in exploredList): continue
+        exploredList.append(nowLocation)
+        for (nextLocation, move, cost) in problem.getSuccessors(nowLocation): frontier.push((nextLocation, path + [move,]))
 
 def uniformCostSearch(problem):
     "Search the node of least total cost first. "
@@ -143,15 +143,15 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     #Initialize frontier
     frontier.push((problem.getStartState(), [], heuristic(problem.getStartState(), problem)), heuristic(problem.getStartState(), problem))
     #Initialize explored set to be empty
-    exploredSet = set()
+    exploredList = list()
     
     while frontier:
         nowLocation, path, nowHeuristic = frontier.pop()
         if (problem.isGoalState(nowLocation)): return path
-        if (nowLocation not in exploredSet):
-            exploredSet.add(nowLocation)
-            for (nextLocation, move, nextHeuristic) in problem.getSuccessors(nowLocation):
-                frontier.push((nextLocation, path + [move,], nowHeuristic + nextHeuristic + heuristic(nextLocation, problem) - heuristic(nowLocation, problem)), nowHeuristic + nextHeuristic + heuristic(nextLocation, problem) - heuristic(nowLocation, problem))
+        if (nowLocation in exploredList): continue
+        exploredList.append(nowLocation)
+        for (nextLocation, move, nextHeuristic) in problem.getSuccessors(nowLocation):
+            frontier.push((nextLocation, path + [move,], nowHeuristic + nextHeuristic + heuristic(nextLocation, problem) - heuristic(nowLocation, problem)), nowHeuristic + nextHeuristic + heuristic(nextLocation, problem) - heuristic(nowLocation, problem))
 
 # Abbreviations
 bfs = breadthFirstSearch
