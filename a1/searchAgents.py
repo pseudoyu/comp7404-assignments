@@ -19,6 +19,7 @@ project description for details.
 
 Good luck and happy searching!
 """
+from typing import Dict
 from game import Directions
 from game import Agent
 from game import Actions
@@ -352,9 +353,38 @@ def cornersHeuristic(state, problem):
     corners = problem.corners # These are the corner coordinates
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
+	# util.manhattanDistance: Returns the Manhattan distance between points xy1 and xy2
+	# mazeDistance: Returns the maze distance between any two points
     "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+    # Return value
+    heuristicValue = 0
 
+    # Initialization
+    nowLocation, visitedCorners = state[0], state[1]
+    unvisitedCorners = []
+    
+    # Targets
+    cornersList = list(corners)
+
+    for corner in cornersList:
+        if corner not in visitedCorners:
+            unvisitedCorners.append(corner)
+    
+    while unvisitedCorners:
+        # List version: distancesList = [util.manhattanDistance(corner, nowLocation) for corner in unvisitedCorners]
+        # Better dict version
+        distancesDict = {}
+        for corner in unvisitedCorners:
+            # Using mazeDistance(point1, point2, gameState) Failed, try later
+            distancesDict[corner] = util.manhattanDistance(nowLocation, corner)
+        # print(distancesDict)
+        shortestDistance = min(distancesDict.values())
+        heuristicValue += shortestDistance
+        nowLocation = min(distancesDict)
+        unvisitedCorners.remove(nowLocation)
+    
+    return heuristicValue
+		
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
     def __init__(self):
