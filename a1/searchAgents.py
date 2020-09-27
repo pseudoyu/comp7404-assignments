@@ -474,7 +474,16 @@ def foodHeuristic(state, problem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
-    return 0
+    # You can call foodGrid.asList() to get a list of food coordinates instead.    
+    foodList = foodGrid.asList()
+    distancesList = [0,]
+
+    for food in foodList:
+        # Manhattan distance to the farthest food from the current state
+        distancesList.append(util.manhattanDistance(position, food))
+    
+    heuristicValue = max(distancesList)
+    return heuristicValue
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
