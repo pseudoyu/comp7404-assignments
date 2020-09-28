@@ -112,38 +112,35 @@ class Board:
         This function should return the number of attacks of the current board
         The datatype of the return value should be int
         """
-
         attackNumber = 0
-
         for i in range(8):
             for j in range(8):
+                if self.squareArray[j][i] == 1:
+                    # horizontalAttacks
+                    r = j
+                    c = i + 1
+                    while (c < 8):
+                        if self.squareArray[r][c] == 1:
+                            attackNumber += 1
+                        c += 1
 
-                # horizontalAttacks
-                r = j
-                c = i + 1
-                while (c < 8):
-                    if self.squareArray[r][c] == 1:
-                        attackNumber += 1
-                    c += 1
-
-                # diagontalAttacks1
-                r = j + 1
-                c = i + 1
-                while (r < 8 & c < 8):
-                    if self.squareArray[r][c] == 1:
-                        attackNumber += 1
-                    r += 1
-                    c += 1
-                
-                # diagontalAttacks2
-                r = j - 1
-                c = i + 1
-                while (r >= 0 & c < 8):
-                    if self.squareArray[r][c] == 1:
-                        attackNumber += 1
-                    r -= 1
-                    c += 1
-
+                    # diagontalAttacksDown
+                    r = j + 1
+                    c = i + 1
+                    while (r < 8 & c < 8):
+                        if self.squareArray[r][c] == 1:
+                            attackNumber += 1
+                        r += 1
+                        c += 1
+                    
+                    # diagontalAttacksUp
+                    r = j - 1
+                    c = i + 1
+                    while (r >= 0 & c < 8):
+                        if self.squareArray[r][c] == 1:
+                            attackNumber += 1
+                        r -= 1
+                        c += 1
         return attackNumber
 
 if __name__ == "__main__":
