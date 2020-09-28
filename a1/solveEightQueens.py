@@ -115,7 +115,7 @@ class Board:
         attackNumber = 0
         for i in range(8):
             for j in range(8):
-                if self.squareArray[j][i] == 1:
+                if self.squareArray[j][i]:
                     # horizontalAttacks
                     r = j
                     c = i + 1
