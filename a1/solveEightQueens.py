@@ -121,8 +121,8 @@ class Board:
         newStatus = [(r, c) for r in range(8) for c in range(8) if currentBoard.squareArray[r][c] == minCost]
         newRow, newCol = random.choice(newStatus)
         currentLocation = [r for r in range(8) if self.squareArray[r][newCol] == 1]
-        currentRow = currentLocation[0]
-        
+        currentRow = random.choice(currentLocation)
+
         # Reconstruct the board to a better one
         betterBoard = copy.deepcopy(self)
         betterBoard.squareArray[currentRow][newCol] = 0
