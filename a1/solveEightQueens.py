@@ -141,6 +141,7 @@ class Board:
                             attackNumber += 1
                         r -= 1
                         c += 1
+        
         return attackNumber
 
 if __name__ == "__main__":
