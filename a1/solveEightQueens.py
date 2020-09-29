@@ -113,14 +113,10 @@ class Board:
         costList = []
         newStatus = []
 
-        # Check attackNumber
-        if attackNumber == 0:
-            return (self, attackNumber, [], [])
-
         # Get minCost of current board
         costList = [currentBoard.squareArray[j][i] for j in range(8) for i in range(8)]
         minCost = min(costList)
-
+        
         # Choose new one randomly
         newStatus = [(r, c) for r in range(8) for c in range(8) if currentBoard.squareArray[r][c] == minCost]
         newRow, newCol = random.choice(newStatus)
