@@ -106,22 +106,27 @@ class Board:
         The datatype of minNumOfAttack, newRow and newCol should be int
         """
 
+        # Input current board
         currentBoard = self.getCostBoard()
         attackNumber = self.getNumberOfAttacks()
         minCost = 0
         costList = []
         newStatus = []
 
+        # Check attackNumber
         if attackNumber == 0:
             return (self, attackNumber, [], [])
 
+        # Get minCost of current board
         costList = [currentBoard.squareArray[j][i] for j in range(8) for i in range(8)]
         minCost = min(costList)
 
+        # Choose new one randomly
         newStatus = [(r, c) for r in range(8) for c in range(8) if currentBoard.squareArray[r][c] == minCost]
         newRow, newCol = random.choice(newStatus)
         currentRow = [r for r in range(8) if self.squareArray[r][newCol] == 1][0]
 
+        # Reconstruct the board to a better one
         betterBoard = copy.deepcopy(self)
         betterBoard.squareArray[currentRow][newCol] = 0
         betterBoard.squareArray[newRow][newCol] = 1
