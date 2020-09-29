@@ -115,7 +115,7 @@ class Board:
         attackNumber = 0
         for i in range(8):
             for j in range(8):
-                if self.squareArray[j][i]:
+                if self.squareArray[j][i] == 1:
                     # horizontalAttacks
                     r = j
                     c = i + 1
@@ -127,7 +127,7 @@ class Board:
                     # diagontalAttacksDown
                     r = j + 1
                     c = i + 1
-                    while (r < 8 & c < 8):
+                    while (r < 8 and c < 8):
                         if self.squareArray[r][c] == 1:
                             attackNumber += 1
                         r += 1
@@ -136,7 +136,7 @@ class Board:
                     # diagontalAttacksUp
                     r = j - 1
                     c = i + 1
-                    while (r >= 0 & c < 8):
+                    while (r >= 0 and c < 8):
                         if self.squareArray[r][c] == 1:
                             attackNumber += 1
                         r -= 1
