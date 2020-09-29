@@ -1,6 +1,7 @@
 import random
 import copy
 from optparse import OptionParser
+from types import new_class
 import util
 
 class SolveEightQueens:
@@ -104,7 +105,28 @@ class Board:
             return (betterBoard, minNumOfAttack, newRow, newCol)
         The datatype of minNumOfAttack, newRow and newCol should be int
         """
-        util.raiseNotDefined()
+
+        currentBoard = self.getCostBoard()
+        attackNumber = self.getNumberOfAttacks()
+        minCost = 0
+        costList = []
+        newStatus = []
+
+        if attackNumber == 0:
+            return (self, attackNumber, [], [])
+
+        costList = [currentBoard.squareArray[j][i] for j in range(8) for i in range(8)]
+        minCost = min(costList)
+
+        newStatus = [(r, c) for r in range(8) for c in range(8) if currentBoard.squareArray[r][c] == minCost]
+        newRow, newCol = random.choice(newStatus)
+        currentRow = [r for r in range(8) if self.squareArray[r][newCol] == 1][0]
+
+        betterBoard = copy.deepcopy(self)
+        betterBoard.squareArray[currentRow][newCol] = 0
+        betterBoard.squareArray[newRow][newCol] = 1
+
+        return (betterBoard, minCost, newRow, newCol)
 
     def getNumberOfAttacks(self):
         """
