@@ -159,11 +159,14 @@ class MinimaxAgent(MultiAgentSearchAgent):
             for action in  actionList:
                 if (agentIndex == agentNumber - 1):
                     if (depth == 1):
-                        gameScoreList += [self.evaluationFunction(nowState.generateSuccessor(agentIndex, action))]
+                        gameScore = self.evaluationFunction(nowState.generateSuccessor(agentIndex, action))
+                        gameScoreList += [gameScore]
                     else:
-                        gameScoreList += [getGameScore(nowState.generateSuccessor(agentIndex, action), depth - 1, 0)]
+                        gameScore = getGameScore(nowState.generateSuccessor(agentIndex, action), depth - 1, 0)
+                        gameScoreList += [gameScore]
                 else:
-                    gameScoreList += [getGameScore(nowState.generateSuccessor(agentIndex, action), depth, agentIndex + 1)]
+                    gameScore = getGameScore(nowState.generateSuccessor(agentIndex, action), depth, agentIndex + 1)
+                    gameScoreList += [gameScore]
 
             # Return function result (score)
             return max(gameScoreList) if agentIndex == 0 else min(gameScoreList)
@@ -174,13 +177,12 @@ class MinimaxAgent(MultiAgentSearchAgent):
         # Get a legal actions list
         actionList = gameState.getLegalActions(0)
         
-        for action in actionList: gameScoreList += [getGameScore(gameState.generateSuccessor(0, action), self.depth, 1)]
+        for action in actionList: gameScore = getGameScore(gameState.generateSuccessor(0, action), self.depth, 1); gameScoreList += [gameScore]
         
         # Get index and return game score result
         i = 0
-        for score in gameScoreList:
-            if score == max(gameScoreList):
-                break
+        for gameScore in gameScoreList:
+            if gameScore == max(gameScoreList): break
             i += 1
 
         return actionList[i]
@@ -245,6 +247,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         
         for action in actionList:
             gameScore = getGameScore(gameState.generateSuccessor(0, action), self.depth, alpha, beta, 1)
+            gameScoreList += [gameScore]
             if (gameScore > alpha): betterScore = action; alpha = gameScore    
             if (beta < alpha): break
         
@@ -264,7 +267,53 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
           legal moves.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # util.raiseNotDefined()
+
+        agentNumber = gameState.getNumAgents()
+
+        # Define a function to get score of a state
+        def getGameScore(nowState, depth, agentIndex):
+
+            # Check game status (Win/Lose)
+            if nowState.isWin() or nowState.isLose(): return self.evaluationFunction(nowState)
+            
+            # Get a legal actions list of the state
+            actionList = nowState.getLegalActions(agentIndex)
+            
+            # Initialize a game score list
+            gameScoreList = []
+
+            # Main function
+            for action in  actionList:
+                if (agentIndex == agentNumber - 1):
+                    if (depth == 1):
+                        gameScore = self.evaluationFunction(nowState.generateSuccessor(agentIndex, action))
+                        gameScoreList += [gameScore]
+                    else:
+                        gameScore = getGameScore(nowState.generateSuccessor(agentIndex, action), depth - 1, 0)
+                        gameScoreList += [gameScore]
+                else:
+                    gameScore = getGameScore(nowState.generateSuccessor(agentIndex, action), depth, agentIndex + 1)
+                    gameScoreList += [gameScore]
+
+            # Return function result (score)
+            return max(gameScoreList) if agentIndex == 0 else (sum(gameScoreList) * 1.0)/len(gameScoreList)
+        
+        # Initialize a game score list
+        gameScoreList = []
+
+        # Get a legal actions list
+        actionList = gameState.getLegalActions(0)
+        
+        for action in actionList: gameScore = getGameScore(gameState.generateSuccessor(0, action), self.depth, 1); gameScoreList += [gameScore]
+        
+        # Get index and return game score result
+        i = 0
+        for gameScore in gameScoreList:
+            if gameScore == max(gameScoreList): break
+            i += 1
+
+        return actionList[i]
 
 def betterEvaluationFunction(currentGameState):
     """
@@ -278,4 +327,3 @@ def betterEvaluationFunction(currentGameState):
 
 # Abbreviation
 better = betterEvaluationFunction
-
