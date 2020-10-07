@@ -68,14 +68,14 @@ class ReflexAgent(Agent):
         gameScore = successorGameState.getScore()
         
         # Calculate distances to food/ghost
-        distanceToFood = [manhattanDistance(newPos, food) for food in newFoodList]
+        distanceToFoodList = [manhattanDistance(newPos, food) for food in newFoodList]
         distanceToGhost = manhattanDistance(newPos, newGhostStates[0].getPosition())
         
         # Initiate the score(weight) of food/ghost
-        scoreOfFood, scoreOfGhost = 10, 10
+        scoreOfFood, scoreOfGhost = 1, 1
 
         # Calculate the final score and return
-        if distanceToFood: gameScore += scoreOfFood/((min(distanceToFood)) * 1.0)
+        if distanceToFoodList: gameScore += scoreOfFood/((min(distanceToFoodList)) * 1.0)
         if distanceToGhost: gameScore -= scoreOfGhost/(distanceToGhost * 1.0)
         
         return gameScore
@@ -320,10 +320,39 @@ def betterEvaluationFunction(currentGameState):
       Your extreme ghost-hunting, pellet-nabbing, food-gobbling, unstoppable
       evaluation function (question 5).
 
-      DESCRIPTION: <write something here so we know what you did>
+      DESCRIPTION: Consider the scaredTimer to get a better one
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # util.raiseNotDefined()
+    
+    # From support files
 
+    # Get newFood
+    newFood = currentGameState.getFood()
+    # Construct newFoodList
+    newFoodList = newFood.asList()
+    # Get newPos
+    newPos = currentGameState.getPacmanPosition()
+    # Get gameScore
+    gameScore = currentGameState.getScore()
+    # Get newGhostStates
+    newGhostStates = currentGameState.getGhostStates()
+    # Get newScaredTimes
+    newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates] 
+
+    # Initiate the score(weight) of food/ghost
+    scoreOfFood, scoreOfGhost, scoreOfScaredGhost = 1, 1, 10
+
+    # Calculate distances to food/ghost
+    distanceToFoodList = [manhattanDistance(newPos, food) for food in newFoodList]
+    if (len(distanceToFoodList) > 0): gameScore += scoreOfFood/(min(distanceToFoodList) * 1.0)
+    
+    for ghost in newGhostStates:
+        distanceToGhost = manhattanDistance(newPos, ghost.getPosition())
+        if ghost.scaredTimer: gameScore += scoreOfScaredGhost/(distanceToGhost * 1.0)
+    
+    # Return results
+    return gameScore
+    
 # Abbreviation
 better = betterEvaluationFunction
