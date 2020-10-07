@@ -61,23 +61,22 @@ class ReflexAgent(Agent):
 
         "*** YOUR CODE HERE ***"
 
-        # Get foodList (based on manhattanDistance)
+        # Get foodList
         newFoodList = newFood.asList()
         
         # Get gameScore
         gameScore = successorGameState.getScore()
         
-        # Calculate distances to food/enemy
-        distanceToFood = [manhattanDistance(newPos,food) for food in newFoodList]
-        distanceToEnemy = manhattanDistance(newPos,newGhostStates[0].getPosition())
+        # Calculate distances to food/ghost
+        distanceToFood = [manhattanDistance(newPos, food) for food in newFoodList]
+        distanceToGhost = manhattanDistance(newPos, newGhostStates[0].getPosition())
         
         # Initiate the score
-        scoreOfFood, scoreOfEnemy = 1, 1
+        scoreOfFood, scoreOfGhost = 1, 1
 
         # Calculate the score
         if distanceToFood: gameScore += scoreOfFood/((min(distanceToFood)) * 1.0)
-        if distanceToEnemy: gameScore -= scoreOfEnemy/(distanceToEnemy * 1.0)
-
+        if distanceToGhost: gameScore -= scoreOfGhost/(distanceToGhost * 1.0)
         return gameScore
 
 def scoreEvaluationFunction(currentGameState):
