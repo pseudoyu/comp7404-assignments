@@ -71,12 +71,13 @@ class ReflexAgent(Agent):
         distanceToFood = [manhattanDistance(newPos, food) for food in newFoodList]
         distanceToGhost = manhattanDistance(newPos, newGhostStates[0].getPosition())
         
-        # Initiate the score
-        scoreOfFood, scoreOfGhost = 1, 1
+        # Initiate the score(weight) of food/ghost
+        scoreOfFood, scoreOfGhost = 10, 10
 
-        # Calculate the score
+        # Calculate the final score and return
         if distanceToFood: gameScore += scoreOfFood/((min(distanceToFood)) * 1.0)
         if distanceToGhost: gameScore -= scoreOfGhost/(distanceToGhost * 1.0)
+        
         return gameScore
 
 def scoreEvaluationFunction(currentGameState):
@@ -138,7 +139,51 @@ class MinimaxAgent(MultiAgentSearchAgent):
             Returns whether or not the game state is a losing state
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # util.raiseNotDefined()
+        
+        agentNumber = gameState.getNumAgents()
+
+        # Define a function to get score of a state
+        def getGameScore(nowState, depth, agentIndex):
+
+            # Check game status (Win/Lose)
+            if nowState.isWin() or nowState.isLose(): return self.evaluationFunction(nowState)
+            
+            # Get a legal actions list of the state
+            actionList = nowState.getLegalActions(agentIndex)
+            
+            # Initialize a game score list
+            gameScoreList = []
+
+            # Main function
+            for action in  actionList:
+                if (agentIndex == agentNumber - 1):
+                    if (depth == 1):
+                        gameScoreList += [self.evaluationFunction(nowState.generateSuccessor(agentIndex, action))]
+                    else:
+                        gameScoreList += [getGameScore(nowState.generateSuccessor(agentIndex, action), depth - 1, 0)]
+                else:
+                    gameScoreList += [getGameScore(nowState.generateSuccessor(agentIndex, action), depth, agentIndex + 1)]
+
+            # Return function result (score)
+            return max(gameScoreList) if agentIndex == 0 else min(gameScoreList)
+        
+        # Initialize a game score list
+        gameScoreList = []
+
+        # Get a legal actions list
+        actionList = gameState.getLegalActions(0)
+        
+        for action in actionList: gameScoreList += [getGameScore(gameState.generateSuccessor(0, action), self.depth, 1)]
+        
+        # Get index and return game score result
+        i = 0
+        for score in gameScoreList:
+            if score == max(gameScoreList):
+                break
+            i += 1
+
+        return actionList[i]
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
     """
@@ -151,7 +196,6 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         """
         "*** YOUR CODE HERE ***"
         util.raiseNotDefined()
-        
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
     """
