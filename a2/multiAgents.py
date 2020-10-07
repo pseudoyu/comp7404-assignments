@@ -326,7 +326,6 @@ def betterEvaluationFunction(currentGameState):
     # util.raiseNotDefined()
     
     # From support files
-
     # Get newFood
     newFood = currentGameState.getFood()
     # Construct newFoodList
@@ -337,21 +336,18 @@ def betterEvaluationFunction(currentGameState):
     gameScore = currentGameState.getScore()
     # Get newGhostStates
     newGhostStates = currentGameState.getGhostStates()
-    # Get newScaredTimes
-    newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates] 
 
     # Initiate the score(weight) of food/ghost
-    scoreOfFood, scoreOfGhost, scoreOfScaredGhost = 1, 1, 10
-
-    # Calculate distances to food/ghost
+    scoreOfFood, scoreOfScaredGhost = 1, 10
+    
+    # Calculate distances to food/ghost, calculate the final score and return
     distanceToFoodList = [manhattanDistance(newPos, food) for food in newFoodList]
-    if (len(distanceToFoodList) > 0): gameScore += scoreOfFood/(min(distanceToFoodList) * 1.0)
+    if distanceToFoodList: gameScore += scoreOfFood/((min(distanceToFoodList)) * 1.0)
     
     for ghost in newGhostStates:
-        distanceToGhost = manhattanDistance(newPos, ghost.getPosition())
-        if ghost.scaredTimer: gameScore += scoreOfScaredGhost/(distanceToGhost * 1.0)
+            distanceToGhost = manhattanDistance(newPos, ghost.getPosition())
+            if ghost.scaredTimer: gameScore += scoreOfScaredGhost/(distanceToGhost * 1.0)
     
-    # Return results
     return gameScore
     
 # Abbreviation
