@@ -195,7 +195,61 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
           Returns the minimax action using self.depth and self.evaluationFunction
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # util.raiseNotDefined()
+
+        agentNumber = gameState.getNumAgents()
+
+        # Define a function to get score of a state
+        def getGameScore(nowState, depth, alpha, beta, agentIndex):
+
+            # Check game status (Win/Lose)
+            if nowState.isWin() or nowState.isLose(): return self.evaluationFunction(nowState)
+            
+            # Get a legal actions list of the state
+            actionList = nowState.getLegalActions(agentIndex)
+            
+            # Initialize a game score list
+            gameScoreList = []
+
+            # Main function (Sorry for so many nested if-else statements...I'll try to improve my coding style)
+            for action in  actionList:
+                if (agentIndex == agentNumber - 1):
+                    if (depth == 1):
+                        gameScore = self.evaluationFunction(nowState.generateSuccessor(agentIndex, action))
+                        gameScoreList += [gameScore]
+                        if (agentIndex == 0):
+                            alpha = max(gameScore, alpha)
+                        else:
+                            beta = min(gameScore, beta)
+                    else:
+                        gameScore = getGameScore(nowState.generateSuccessor(agentIndex, action), depth - 1, alpha, beta, 0)
+                        gameScoreList += [gameScore]
+                        beta = min(gameScore, beta)
+                else:
+                    gameScore = getGameScore(nowState.generateSuccessor(agentIndex, action), depth, alpha, beta, agentIndex + 1)
+                    gameScoreList += [gameScore]
+                    if (agentIndex == 0):
+                        alpha = max(gameScore, alpha)
+                    else:
+                        beta = min(gameScore, beta)
+                if (beta < alpha): break
+
+            # Return function result (score)
+            return max(gameScoreList) if agentIndex == 0 else min(gameScoreList)
+        
+        # Initialize a game score list
+        gameScoreList = []
+        alpha, beta = -float('inf'), float('inf')
+        # Get a legal actions list
+        actionList = gameState.getLegalActions(0)
+        
+        for action in actionList:
+            gameScore = getGameScore(gameState.generateSuccessor(0, action), self.depth, alpha, beta, 1)
+            if (gameScore > alpha): betterScore = action; alpha = gameScore    
+            if (beta < alpha): break
+        
+        # Return game score result
+        return betterScore
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
     """
