@@ -7,6 +7,7 @@
 #################################################################################
 
 import copy
+from os import get_blocking
 import util 
 import sys
 import random
@@ -137,11 +138,207 @@ class TicTacToeAgent():
         """ 
           You can initialize some variables here, but please do not modify the input parameters.
         """
-        {}
+
+        # Set wining status
+        self.winingStatus = ['a', 'bb', 'bc', 'cc']
+        
+        # Set all possible statuses
+
+        # a status
+        status_a_1 = (True, False, False, False, False, False, False, False, True)
+        status_a_2 = (False, True, False, True, False, False, False, False, False)
+        status_a_3 = (False, True, False, False, False, False, False, True, False)
+        status_a_4 = (True, True, False, False, False, False, True, False, False)
+        status_a_5 = (True, False, True, False, True, False, False, False, False) 
+        status_a_6 = (True, False, True, False, False, False, False, True, False)
+        status_a_7 = (True, False, False, False, True, True, False, False, False) 
+        status_a_8 = (True, True, False, True, True, False, False, False, False)
+        status_a_9 = (True, True, False, True, False, True, False, False, False)
+        status_a_10 = (True, True, False, True, False, False, False, False, True)
+        status_a_11 = (True, True, False, False, False, False, False, True, True)
+        status_a_12 = (True, False, True, False, False, False, True, False, True)
+        status_a_13 = (False, True, False, True, False, True, False, True, False)
+        status_a_14 = (True, True, False, False, True, True, True, False, False)
+        status_a_15 = (True, True, False, False, False, True, True, True, False)
+        status_a_16 = (True, True, False, False, False, True, True, False, True)
+        status_a_17 = (True, True, False, True, False, True, False, True, True)
+
+        # ab status
+        status_ab_1 = (True, True, False, False, True, False, False, False, False)
+        status_ab_2 = (True, False, True, False, False, False, True, False, False)
+        status_ab_3 = (False, True, False, True, True, False, False, False, False)
+        status_ab_4 = (True, True, False, False, False, True, False, True, False)
+        status_ab_5 = (True, True, False, False, False, True, False, False, True)
+
+        # ad status
+        status_ad_1 = (True, True, False, False, False, False, False, False, False)
+
+        # b status
+        status_b_1 = (True, False, True, False, False, False, False, False, False)
+        status_b_2 = (True, False, False, False, True, False, False, False, False)
+        status_b_3 = (True, False, False, False, False, True, False, False, False)
+        status_b_4 = (False, True, False, False, True, False, False, False, False)
+        status_b_5 = (True, True, False, True, False, False, False, False, False)
+        status_b_6 = (False, True, False, True, False, True, False, False, False)
+        status_b_7 = (True, True, False, False, True, True, False, False, False)
+        status_b_8 = (True, True, False, False, True, False, True, False, False)
+        status_b_9 = (True, True, False, False, False, True, True, False, False)
+        status_b_10 = (True, True, False, False, False, False, True, True, False)
+        status_b_11 = (True, True, False, False, False, False, True, False, True)
+        status_b_12 = (True, False, True, False, True, False, False, True, False)
+        status_b_13 = (True, False, False, False, True, True, False, True, False)
+        status_b_14 = (True, True, False, True, False, True, False, False, True)
+        status_b_15 = (True, True, False, True, False, True, False, True, False)
+
+        # c status
+        status_c_1 = (False, False, False, False, False, False, False, False, False)
+
+        # cc status
+        status_cc_1 = (False, False, False, False, True, False, False, False, False)
+
+        # d status
+        status_d_1 = (True, True, False, False, False, True, False, False, False)
+        status_d_2 = (True, True, False, False, False, False, False, True, False)
+        status_d_3 = (True, True, False, False, False, False, False, False, True)
+
+        # Other status
+        status_other_1 = (True, False, False, False, False, False, False, False, False)
+        status_other_2 = (False, True, False, False, False, False, False, False, False)
+        status_other_3 = (True, False, False, False, False, True, False, True, False)
+        
+        # Set statusDict
+        self.statusDict = {
+            # a status dict
+            status_a_1: "a",
+            status_a_2: "a",
+            status_a_3: "a",
+            status_a_4: "a",
+            status_a_5: "a",
+            status_a_6: "a",
+            status_a_7: "a",
+            status_a_8: "a",
+            status_a_9: "a",
+            status_a_10: "a",
+            status_a_11: "a",
+            status_a_12: "a",
+            status_a_13: "a",
+            status_a_14: "a",
+            status_a_15: "a",
+            status_a_16: "a",
+            status_a_17: "a",
+
+            # ab status dict
+            status_ab_1: "ab",
+            status_ab_2: "ab",
+            status_ab_3: "ab",
+            status_ab_4: "ab",
+            status_ab_5: "ab",
+
+            # ad status dict
+            status_ad_1: "ad",
+
+            # b status dict
+            status_b_1: "b",
+            status_b_2: "b",
+            status_b_3: "b",
+            status_b_4: "b",
+            status_b_5: "b",
+            status_b_6: "b",
+            status_b_7: "b",
+            status_b_8: "b",
+            status_b_9: "b",
+            status_b_10: "b",
+            status_b_11: "b",
+            status_b_12: "b",
+            status_b_13: "b",
+            status_b_14: "b",
+            status_b_15: "b",
+
+            # c status dict
+            status_c_1: "c",
+
+            # cc status dict
+            status_cc_1: "cc",
+
+            # d status dict
+            status_d_1: "d",
+            status_d_2: "d",
+            status_d_3: "d",
+
+            # Other status dict
+            status_other_1: "",
+            status_other_2: "",
+            status_other_3: ""
+        }
+
+    # An personal implementation of a related paper The Secrets of Notakto: Winning at X-only Tic-Tac-Toe
+    # This paper was written by Thane E. Plambeck, Greg Whitehead, https://arxiv.org/pdf/1301.1672.pdf
+    # This paper applies a method to solve this problem
+    # I have no idea about how to sovle it using other methods
+    # If it's not allowed to use paper as a reference, just ignore it
+    # Thank you so so much!!!
+
+    def getBoardList(self, board):
+        
+        # Get reversed board
+        boardReversed = [board[i * 3 + j] for j in range(0, 3) for i in range(3)]
+        
+        # get reflected board
+        boardReflect1 = board[::-1]
+        boardReflect2 = boardReversed[::-1]
+
+        return [board, boardReflect1, boardReversed, boardReflect2]
+
+    def getPattern(self, board):
+        
+        boardList = self.getBoardList(board)
+        boardDict = self.statusDict
+
+        # Construct new board
+        for i in range(0, 4):
+            newBoard = [boardList[i][r * 3 + c] for c in range(0, 3, 1) for r in range(2, -1, -1)]
+            boardList.append(newBoard)
+        
+        for board in boardList:
+            board = tuple(board)
+            if board in boardDict: return boardDict[board]
+
+    def evaluationFunction(self, gameState, gameRules):
+        
+        winingStatus = self.winingStatus
+        status = []
+        result = []
+        
+        for board in gameState.boards:
+            newPattern = self.getPattern(board)
+            
+            # Dead test
+            if gameRules.deadTest(board):
+                continue
+            else:
+                status += newPattern
+        
+        # Sort status
+        status = sorted(status)
+        
+        # Check winingStatus
+        result = ''.join(status) in winingStatus
+
+        return result
 
     def getAction(self, gameState, gameRules):
-        util.raiseNotDefined()
-
+        
+        gameActions = gameState.getLegalActions(gameRules)
+        
+        for action in gameActions:
+            
+            # Check winingStatus
+            stateAction = gameState.generateSuccessor(action)
+            if self.evaluationFunction(stateAction, gameRules): return action
+        
+        # Choose next action randomly and return
+        betterAction = random.shuffle(gameState.getLegalActions(gameRules))[0]
+        return betterAction
 
 class randomAgent():
     """
@@ -154,7 +351,6 @@ class randomAgent():
     def getAction(self, gameState, gameRules):
         actions = gameState.getLegalActions(gameRules)
         return random.choice(actions)
-
 
 class keyboardAgent():
     """
