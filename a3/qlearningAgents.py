@@ -151,7 +151,7 @@ class QLearningAgent(ReinforcementAgent):
         prevQVlaue = self.getQValue(state, action)
 
         # Update QValue
-        self.QValue[(state, action)] = (prevQVlaue * (1 - self.alpha)) + (self.alpha * (reward + self.getValue(nextState) * self.discount))
+        self.QValue[(state, action)] = (prevQVlaue * (1 - self.alpha)) + self.alpha * (reward + self.getValue(nextState) * self.discount)
 
     def getPolicy(self, state):
         return self.computeActionFromQValues(state)
@@ -214,15 +214,37 @@ class ApproximateQAgent(PacmanQAgent):
           where * is the dotProduct operator
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # util.raiseNotDefined()
+
+        # Get feature list
+        featureList = self.featExtractor.getFeatures(state, action)
         
+        # Get weight
+        weights = self.getWeights()
+        
+        # Calculate QValue
+        QValue = sum([(featureList[feature] * weights[feature]) for feature in featureList]) 
+        
+        return QValue
 
     def update(self, state, action, nextState, reward):
         """
            Should update your weights based on transition
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # util.raiseNotDefined()
+
+        # Get feature list
+        featureList = self.featExtractor.getFeatures(state, action)
+
+        # Get weight
+        weights = self.getWeights()
+        
+        # Calculate difference
+        difference = reward + self.computeValueFromQValues(nextState) * self.discount - self.getQValue(state,action)
+
+        # Update weight
+        for feature in featureList: weights[feature] += featureList[feature] * self.alpha * difference
 
     def final(self, state):
         "Called at the end of each game."
