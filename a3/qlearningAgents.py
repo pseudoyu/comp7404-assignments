@@ -29,6 +29,9 @@ class QLearningAgent(ReinforcementAgent):
         ReinforcementAgent.__init__(self, **args)
 
         "*** YOUR CODE HERE ***"
+        
+        # Initialization
+        self.QValue = util.Counter()
 
     def getQValue(self, state, action):
         """
@@ -37,8 +40,14 @@ class QLearningAgent(ReinforcementAgent):
           or the Q node value otherwise
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # util.raiseNotDefined()
 
+        # check
+        if (state, action) not in self.QValue:
+          return 0.0
+        else:
+          # Get QValue
+          return self.QValue[(state, action)]
 
     def computeValueFromQValues(self, state):
         """
@@ -48,7 +57,29 @@ class QLearningAgent(ReinforcementAgent):
           terminal state, you should return a value of 0.0.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # util.raiseNotDefined()
+        
+        # Initialization
+        optimialAction = ""
+        optimialValue = 0.
+        optimialActionDict = util.Counter()
+
+        # Get legal action list
+        legalActionList = self.getLegalActions(state)
+        
+        # Check
+        if len(legalActionList) == 0: return 0.0
+        
+        for action in legalActionList:
+          
+          # Construct optimial action dict
+          optimialActionDict[action] = self.getQValue(state, action)
+        
+        # Returns the key with the highest value (best Value)
+        optimialAction = optimialActionDict.argMax()
+        optimialValue = optimialActionDict[optimialAction]
+
+        return optimialValue
 
     def computeActionFromQValues(self, state):
         """
@@ -57,7 +88,28 @@ class QLearningAgent(ReinforcementAgent):
           you should return None.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # util.raiseNotDefined()
+        
+        # Initialization
+        
+        optimialAction = ""
+        optimialActionDict = util.Counter()
+
+        # Get legal action list
+        legalActionList = self.getLegalActions(state)
+        
+        # Check
+        if len(legalActionList) == 0: return 0.0
+        
+        for action in legalActionList:
+          
+          # Construct optimial action dict
+          optimialActionDict[action] = self.getQValue(state, action)
+        
+        # Returns the key with the highest value (best Value)
+        optimialAction = optimialActionDict.argMax()
+
+        return optimialAction
 
     def getAction(self, state):
         """
@@ -71,13 +123,17 @@ class QLearningAgent(ReinforcementAgent):
           HINT: To pick randomly from a list, use random.choice(list)
         """
         # Pick Action
-        legalActions = self.getLegalActions(state)
-        action = None
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # Initialization
+        pickAction = ""
 
-        return action
+        # Get legal action list
+        legalActionList = self.getLegalActions(state)
+        
+        # Check
+        if len(legalActionList) == 0: return None
 
+        pickAction = (random.choice(legalActionList) if util.flipCoin(self.epsilon) else self.computeActionFromQValues(state))
+        return pickAction
 
     def update(self, state, action, nextState, reward):
         """
@@ -89,7 +145,13 @@ class QLearningAgent(ReinforcementAgent):
           it will be called on your behalf
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # util.raiseNotDefined()
+        
+        # Get prevQVlaue
+        prevQVlaue = self.getQValue(state, action)
+
+        # Update QValue
+        self.QValue[(state, action)] = (prevQVlaue * (1 - self.alpha)) + (self.alpha * (reward + self.getValue(nextState) * self.discount))
 
     def getPolicy(self, state):
         return self.computeActionFromQValues(state)
@@ -153,6 +215,7 @@ class ApproximateQAgent(PacmanQAgent):
         """
         "*** YOUR CODE HERE ***"
         util.raiseNotDefined()
+        
 
     def update(self, state, action, nextState, reward):
         """
